@@ -11,6 +11,8 @@ public class NovProjectModuleApplication {
     public static void main(String[] args) {
         SpringApplication.run(NovProjectModuleApplication.class, args);
 
+//          This is a comment
+
 //        Product p = new Product();
 //        p.setId(12L);
 //        System.out.println(p);
