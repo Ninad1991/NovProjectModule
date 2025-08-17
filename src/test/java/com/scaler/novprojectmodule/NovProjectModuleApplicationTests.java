@@ -59,13 +59,13 @@ class NovProjectModuleApplicationTests {
 			System.out.println(currentProduct.size());
 			System.out.println("We got the category as well");*/
 
-		Category cat = categoryRepository.findAll().get(3);
+/*		Category cat = categoryRepository.findAll().get(3);
 
 		List<Product> products = cat.getProducts();
 
 		for (Product product : products) {
 			System.out.println(product);
-		}
+		}*/
 
 
 	}

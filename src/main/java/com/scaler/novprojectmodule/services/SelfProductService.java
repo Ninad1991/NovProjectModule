@@ -6,9 +6,11 @@ import com.scaler.novprojectmodule.models.Product;
 
 import com.scaler.novprojectmodule.repository.CategoryRepository;
 import com.scaler.novprojectmodule.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,11 +34,15 @@ public class SelfProductService implements ProductService {
             throw new ProductNotFoundException("Product is not found in our DB");
     }
 
+
+
     @Override
-    public List<Product> getAllProducts() {
-        List<Product> allProducts = productRepository.findAll();
-        return allProducts;
+    public Page<Product> getAllProducts(int pageNumber, int pageSize, String fieldName, String searchQuery) {
+        Page<Product> products = productRepository.findAll(PageRequest.of(pageNumber, pageSize
+        , Sort.by(fieldName).ascending()));
+        return products;
     }
+
 
     @Override
     public Product createProduct(Long id, String title, String description,
@@ -62,22 +68,58 @@ public class SelfProductService implements ProductService {
         p.setPrice(price);
 
 
-        Product savedProduct=productRepository.save(p);
-        return savedProduct;
+        return productRepository.save(p);
+        //return savedProduct;
 
     }
 
     @Override
-    public void updateProduct(Long id, String title, String description, Double price, String category, String image) {
+    public void updateProduct(Long id, String title, String description, Double price, String image) {
         Optional<Product> productOptional = productRepository.findById(id);
         if (productOptional.isEmpty()) {
             throw new RuntimeException("Product with ID " + id + " not found");
         }
 
         Product updateProduct  = productOptional.get();
-
+        updateProduct.setTitle(title);
+        updateProduct.setDescription(description);
+        updateProduct.setPrice(price);
+        updateProduct.setImageurl(image);
+        productRepository.save(updateProduct);
 
     }
+    public void deleteProduct(Long id){
+        Optional<Product> productOptional = productRepository.findById(id);
+        if (productOptional.isEmpty()) {
+            throw new RuntimeException("Product with ID " + id + " not found");
+        }
+        productRepository.deleteById(id);
+    }
+
+
+
+    public List<Product> getProductsByCategory(String category) {
+        List<Product> productList = productRepository.getProductsByCategory(category);
+        return productList;
+    }
+
+    @Override
+    public List<Category> getAllCategories() {
+        List<Category> allCategories = categoryRepository.findAll();
+        return allCategories;
+    }
+
+    @Override
+    public Category createCategory(String title) {
+        return null;
+    }
+
+    @Override
+    public List<Product> searchProducts(String query) {
+        List<Product> allProducts = productRepository.findAll();
+        return allProducts;
+    }
+
 
 
 }
